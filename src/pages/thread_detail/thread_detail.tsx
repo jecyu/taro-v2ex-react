@@ -1,11 +1,12 @@
 import { Component } from "react";
+import { connect } from "react-redux";
 import { View, RichText, Image } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 
-import { Thread } from "../../components/thread";
+import Thread from "../../components/thread";
 import { IThread } from "src/interfaces/thread";
 import { getTopics, getReplies } from "../../utils/api";
-import { IThreadProps, GlobalState, timeagoInst } from "../../utils/index";
+import { IThreadProps, timeagoInst } from "../../utils/index";
 import { Loading } from "../../components/loading";
 import "./index.scss";
 export interface IState {
@@ -14,8 +15,6 @@ export interface IState {
   content: string;
   thread: IThreadProps;
 }
-
-// TODO 排查图片请求问题，http-server
 
 function prettyHTML(str) {
   const lines = ["p", "h1", "h2", "h3", "h4", "h5", "h6"];
@@ -28,12 +27,16 @@ function prettyHTML(str) {
 
   return str.replace(/<img/gi, '<img class="img"');
 }
-export default class ThreadDetail extends Component<{}, IState> {
+
+interface IProps {
+  thread: IThreadProps;
+}
+class ThreadDetail extends Component<IProps, IState> {
   state = {
     loading: true,
     replies: [],
     content: "",
-    thread: GlobalState.thread,
+    thread: this.props.thread,
   } as IState;
   config = {
     navigationBarTitleText: "话题",
@@ -41,7 +44,7 @@ export default class ThreadDetail extends Component<{}, IState> {
 
   async componentDidMount() {
     try {
-      const id = GlobalState.thread.tid;
+      const id = this.props.thread.tid;
       const [
         { data },
         {
@@ -77,7 +80,8 @@ export default class ThreadDetail extends Component<{}, IState> {
           <View className="main">
             <View className="author">{reply.member.username}</View>
             <View className="time">{time}</View>
-            <RichText nodes={reply.content} className="content"></RichText>
+            {/* <RichText nodes={reply.content} className="content"></RichText> */}
+            <View dangerouslySetInnerHTML={{ __html: reply.content }} className='content'></View>
             <View className="floor">{index + 1} 楼</View>
           </View>
         </View>
@@ -111,3 +115,8 @@ export default class ThreadDetail extends Component<{}, IState> {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return { thread: state.thread };
+}
+export default connect(mapStateToProps)(ThreadDetail);

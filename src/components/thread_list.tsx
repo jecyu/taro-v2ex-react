@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { View } from "@tarojs/components";
-import { Thread } from "./thread";
+import Thread from "./thread";
 import { Loading } from "./loading";
 
 import "./thread.scss";
