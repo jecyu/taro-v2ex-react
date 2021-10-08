@@ -1,4 +1,4 @@
-import timeago from "timeago";
+import timeago from "timeago.js";
 import { eventCenter } from "@tarojs/taro";
 
 import { IThread } from "../interfaces/thread";
@@ -9,13 +9,13 @@ export interface IThreadProps extends IThread {
 // tslint:disable-next-line
 export const Thread_DETAIL_NAVIGATE = "thread_detail_navigate";
 
-eventCenter.on(Thread_DETAIL_NAVIGATE, (thread: IThreadProps) => {
-  GlobalState.thread = thread;
-});
-
 export const GlobalState = {
   thread: {} as IThreadProps,
 };
+
+eventCenter.on(Thread_DETAIL_NAVIGATE, (thread: IThreadProps) => {
+  GlobalState.thread = thread;
+});
 
 export const timeagoInst = timeago();
 // 数字/英文与中文之间需要加空格

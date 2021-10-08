@@ -4,7 +4,7 @@ import { View } from "@tarojs/components";
 
 import { IThread } from "src/interfaces/thread";
 import { ThreadList } from "../../components/thread_list";
-import api from "../../utils/api";
+import { getLatestTopic } from "../../utils/api";
 
 import "./index.scss";
 
@@ -15,14 +15,14 @@ export default class Index extends Component {
 
   state = {
     loading: true,
-    threads: []
+    threads: [],
   };
 
   componentWillMount() {}
 
   async componentDidMount() {
     try {
-      const res = await Taro.request<IThread[]>({ url: api.getLatestTopic() });
+      const res = await Taro.request<IThread[]>({ url: getLatestTopic() });
       this.setState({
         threads: res.data,
         loading: false,
